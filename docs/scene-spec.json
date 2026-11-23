@@ -1,0 +1,1029 @@
+{
+  "_lisez_moi": "Spécification géométrique de la scène. Source : scripts plan3d.py et sous_fondation.py (version du 22/11/2026, validée par Paula). Unités : mètres. Repère du plan : x vers la droite de la maison de Paula, y vers l'arrière de sa maison (la façade côté voisins est en y = 0, les voisins sont en y négatif), z vers le haut. Sol de Paula : z = 0. Sol rehaussé des voisins : z = RZ. Tout est SCHÉMATIQUE, non à l'échelle : ne jamais présenter ces cotes comme des mesures.",
+  "conversion_threejs": {
+    "_note_ancres": "Chaque élément porte une ancre [x, y, z] (repère du plan) pour sa pastille. Calculée depuis la géométrie, calée sur la planche 1, puis ajustée à l'étape 3 (23/11/2026) pour que les pastilles ne se chevauchent pas sur téléphone.",
+    "regle": "Three.js a l'axe Y vers le haut. Convertir (x, y, z) du plan en Vector3(x, z, y). Cette correspondance reproduit la planche validée telle qu'elle est dessinée (maison de Paula en bas à gauche, maison voisine en haut à droite). Elle inverse l'orientation des faces : pour les polygones de sol et les extrusions, vérifier les normales ou utiliser side: DoubleSide.",
+    "camera_par_defaut": "Vue isométrique en hauteur, du côté +x +y du plan : position Three.js approx. (38, 30, 34), cible (10, 2, -3) (centre de la scène). Vérification : sur l'écran, la maison voisine doit apparaître en haut à droite et la maison de Paula en bas à gauche, comme sur reference/1_plan_3d_derniere_version.png."
+  },
+  "constantes": {
+    "RZ": 1.3,
+    "hauteur_mur_voisins": 1.35,
+    "epaisseur_mur_voisins": 0.25,
+    "espace_facade_mur": 0.03
+  },
+  "palette": {
+    "papier": "#EDF1F0",
+    "encre": "#1F2A36",
+    "attenue": "#5E6B77",
+    "eau": "#1584D4",
+    "eau_clair": "#8CC8EE",
+    "boue": "#8A6A3E",
+    "terre": "#B39168",
+    "terre_fonce": "#8C6C47",
+    "beton": "#A3ACB3",
+    "beton_fonce": "#7E8890",
+    "mur_voisins": "#6E8FB8",
+    "mur_voisins_fonce": "#476585",
+    "limite": "#B0392E",
+    "vert": "#86A57C",
+    "vert_fonce": "#5D7F55",
+    "haie": "#6E9466",
+    "sol_voisins": "#DCE6D3",
+    "sol_paula": "#E8EEE2",
+    "voirie": "#C8CDD1",
+    "maison_paula_murs": "#F2E9DA",
+    "maison_paula_toit": "#9C6B4E",
+    "maison_voisine_murs": "#F3F1EC",
+    "maison_voisine_toit": "#6F7C88",
+    "palissade": "#4B3A2E"
+  },
+  "sols": {
+    "terrain_voisins_rehausse": {
+      "_note": "Décision du 23/11/2026 : terrain rehaussé prolongé jusqu'à la palissade, la douche et le cabanon (sommets 22.1). Bord indicatif.",
+      "z": 1.3,
+      "polygone": [
+        [
+          -3,
+          -17
+        ],
+        [
+          24,
+          -17
+        ],
+        [
+          24,
+          -4.6
+        ],
+        [
+          22.1,
+          -3.4
+        ],
+        [
+          22.1,
+          -0.6
+        ],
+        [
+          16.4,
+          -0.6
+        ],
+        [
+          13.2,
+          -0.6
+        ],
+        [
+          13.2,
+          -0.3
+        ],
+        [
+          -1,
+          -0.3
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          -3,
+          -2
+        ]
+      ]
+    },
+    "terrain_paula": {
+      "z": 0,
+      "polygone": [
+        [
+          -3,
+          -2
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          -1,
+          -0.3
+        ],
+        [
+          13.2,
+          -0.3
+        ],
+        [
+          13.2,
+          -0.6
+        ],
+        [
+          16.4,
+          -0.6
+        ],
+        [
+          22.1,
+          -0.6
+        ],
+        [
+          22.1,
+          -3.4
+        ],
+        [
+          24,
+          -4.6
+        ],
+        [
+          24,
+          12
+        ],
+        [
+          -3,
+          12
+        ]
+      ]
+    },
+    "voiries": [
+      {
+        "nom": "voirie gauche",
+        "polygone": [
+          [
+            -6,
+            -17
+          ],
+          [
+            -3,
+            -17
+          ],
+          [
+            -3,
+            14
+          ],
+          [
+            -6,
+            14
+          ]
+        ]
+      },
+      {
+        "nom": "voirie droite",
+        "polygone": [
+          [
+            24,
+            -17
+          ],
+          [
+            27,
+            -17
+          ],
+          [
+            27,
+            14
+          ],
+          [
+            24,
+            14
+          ]
+        ]
+      },
+      {
+        "nom": "voirie basse",
+        "polygone": [
+          [
+            -6,
+            12
+          ],
+          [
+            27,
+            12
+          ],
+          [
+            27,
+            14
+          ],
+          [
+            -6,
+            14
+          ]
+        ]
+      }
+    ],
+    "remblai_face_visible": {
+      "de": [
+        -1,
+        -0.3
+      ],
+      "a": [
+        13.2,
+        -0.3
+      ],
+      "z0": 0,
+      "z1": 1.3,
+      "materiau": "terre argileuse, hachures"
+    }
+  },
+  "elements": [
+    {
+      "id": 1,
+      "ancre": [6.5, -8.5, 8.6],
+      "groupe": "voisins",
+      "nom": "Maison voisine",
+      "type": "maison_toit_deux_pans",
+      "x0": 0,
+      "y0": -15,
+      "x1": 13,
+      "y1": -6,
+      "z0": 1.3,
+      "hauteur_murs": 6.0,
+      "faitage": 3.3,
+      "faitage_parallele_a": "x",
+      "etiquette": "Maison voisine",
+      "texte": "Maison des voisins, construite sur leur terrain, plus haut que celui de Paula."
+    },
+    {
+      "id": 2,
+      "ancre": [4, -0.3, 1.6],
+      "groupe": "voisins",
+      "nom": "Mur en béton des voisins",
+      "type": "mur_polyligne",
+      "epaisseur": 0.25,
+      "z0": 0,
+      "hauteur": 1.35,
+      "points": [
+        [
+          -3,
+          -2.0
+        ],
+        [
+          -1,
+          -2.0
+        ],
+        [
+          -1,
+          -0.3
+        ],
+        [
+          13.2,
+          -0.3
+        ],
+        [
+          13.2,
+          -0.6
+        ],
+        [
+          16.4,
+          -0.6
+        ],
+        [
+          18.0,
+          -1.5
+        ]
+      ],
+      "texte": "Mur en béton en trois « L », environ 1,20 m au-dessus du sol de Paula, à environ 3 cm de sa façade, puis en oblique vers la douche."
+    },
+    {
+      "id": 3,
+      "ancre": [-2.2, -8, 1.4],
+      "groupe": "voisins",
+      "nom": "Remblai",
+      "type": "reference_sol",
+      "voir": "sols.terrain_voisins_rehausse",
+      "texte": "Remblai d'environ 1,30 m : le terrain des voisins a été rehaussé."
+    },
+    {
+      "id": 4,
+      "ancre": [18.5, -7, 2.5],
+      "groupe": "voisins",
+      "nom": "Dalle en béton",
+      "type": "dalle",
+      "z": 1.33,
+      "epaisseur": 0.15,
+      "polygone": [
+        [
+          15.5,
+          -7
+        ],
+        [
+          23.5,
+          -7
+        ],
+        [
+          23.5,
+          -4.4
+        ],
+        [
+          17,
+          -0.7
+        ],
+        [
+          15.5,
+          -0.7
+        ]
+      ],
+      "texte": "Dalle en béton."
+    },
+    {
+      "id": 5,
+      "ancre": [19.5, -2.6, 8.5],
+      "groupe": "voisins",
+      "nom": "Douche et cabanon",
+      "type": "boites",
+      "boites": [
+        {
+          "nom": "douche",
+          "x0": 17.6,
+          "y0": -3.4,
+          "x1": 19.8,
+          "y1": -0.9,
+          "z0": 1.33,
+          "hauteur": 2.3,
+          "couleur": "#A3ACB3"
+        },
+        {
+          "nom": "cabanon",
+          "x0": 19.8,
+          "y0": -3.9,
+          "x1": 22.0,
+          "y1": -1.2,
+          "z0": 1.33,
+          "hauteur": 2.7,
+          "couleur": "#7E8890"
+        }
+      ],
+      "texte": "Douche et cabanon, ensemble, sur la dalle, dans le « V » formé par la haie."
+    },
+    {
+      "id": 6,
+      "ancre": [22.4, -0.9, 1.3],
+      "groupe": "voisins",
+      "nom": "Palissade",
+      "type": "boite",
+      "x0": 16.6,
+      "y0": -1.0,
+      "x1": 21.6,
+      "y1": -0.8,
+      "z0": 1.3,
+      "hauteur": 1.4,
+      "texte": "Palissade en bois sombre (2,20 m à l'origine, raccourcie en octobre 2026). Position à vérifier."
+    },
+    {
+      "id": 7,
+      "ancre": [0.5, -1.1, 10.2],
+      "groupe": "vegetation",
+      "nom": "Rangée de tilleuls le long du mur",
+      "type": "arbres",
+      "z0": 1.3,
+      "hauteur": 8.5,
+      "rayon_houppier": 1.6,
+      "positions": [
+        [
+          0.5,
+          -1.1
+        ],
+        [
+          3.5,
+          -1.1
+        ],
+        [
+          6.5,
+          -1.1
+        ],
+        [
+          9.5,
+          -1.1
+        ]
+      ],
+      "texte": "Rangée de tilleuls le long du mur (environ 15 m de haut). Hauteur réduite dans la scène pour la lisibilité."
+    },
+    {
+      "id": 8,
+      "ancre": [16.6, -5.6, 12.9],
+      "groupe": "vegetation",
+      "nom": "Gros tilleul",
+      "type": "arbre",
+      "position": [
+        16.6,
+        -5.6
+      ],
+      "z0": 1.3,
+      "hauteur": 11,
+      "rayon_houppier": 2.8,
+      "couleur": "#7C9E72",
+      "texte": "Gros tilleul (environ 30 m), à environ 2 m de la douche et du cabanon. Hauteur réduite dans la scène pour la lisibilité."
+    },
+    {
+      "id": 9,
+      "ancre": [22.6, 2.5, 1.2],
+      "groupe": "vegetation",
+      "nom": "Haie",
+      "type": "haies",
+      "segments": [
+        {
+          "de": [
+            18.6,
+            -2.6
+          ],
+          "a": [
+            23.6,
+            -5.2
+          ],
+          "z0": 1.3
+        },
+        {
+          "de": [
+            22.2,
+            -3.4
+          ],
+          "a": [
+            22.6,
+            2.5
+          ],
+          "z0": 0
+        }
+      ],
+      "hauteur": 1.8,
+      "epaisseur": 0.9,
+      "texte": "Haie de part et d'autre du « V » : Paula y est enclose."
+    },
+    {
+      "id": 10,
+      "ancre": [-4.5, -15, 10.2],
+      "groupe": "vegetation",
+      "nom": "Tilleuls de la voirie",
+      "type": "arbres",
+      "z0": 0,
+      "hauteur": 8,
+      "rayon_houppier": 1.6,
+      "positions": [
+        [
+          -4.5,
+          -15
+        ],
+        [
+          -4.5,
+          -11.5
+        ],
+        [
+          -4.5,
+          -8
+        ],
+        [
+          -4.5,
+          -4.5
+        ]
+      ],
+      "texte": "Quatre tilleuls le long de la voirie, côté gauche."
+    },
+    {
+      "id": 11,
+      "ancre": [2, 4, 7],
+      "groupe": "paula",
+      "nom": "Maison de Paula",
+      "type": "maison_toit_deux_pans",
+      "x0": 0,
+      "y0": 0,
+      "x1": 9,
+      "y1": 8,
+      "z0": 0,
+      "hauteur_murs": 5.5,
+      "faitage": 3.0,
+      "faitage_parallele_a": "x",
+      "transparence_vue_ensemble": 0.62,
+      "texte": "Maison de Paula (1820), représentée transparente pour voir ce qui se passe dessous."
+    },
+    {
+      "id": 12,
+      "ancre": [11, 1.2, 3.6],
+      "groupe": "paula",
+      "nom": "Annexe",
+      "type": "boite",
+      "x0": 9,
+      "y0": 0.0,
+      "x1": 13.2,
+      "y1": 1.2,
+      "z0": 0,
+      "hauteur": 2.8,
+      "texte": "Annexe (4,20 × 1,20 m d'après le plan de 2015)."
+    },
+    {
+      "id": 13,
+      "ancre": [15.8, 0.1, 1.2],
+      "groupe": "paula",
+      "nom": "Rondins en béton",
+      "type": "rondins",
+      "nombre": 8,
+      "x_depart": 13.25,
+      "pas": 0.4,
+      "largeur": 0.34,
+      "y0": -0.25,
+      "y1": 0.09,
+      "z0": 0,
+      "hauteur": 1.0,
+      "texte": "Rondins en béton, sans fondation, présents à l'achat ; le mur des voisins s'y appuie."
+    },
+    {
+      "id": 14,
+      "ancre": [24, -4.6, 1.4],
+      "groupe": "limite",
+      "nom": "Bornes et limite",
+      "type": "limite",
+      "ligne": {
+        "de": [
+          13.2,
+          0.1
+        ],
+        "a": [
+          24,
+          -4.6
+        ],
+        "style": "tirets",
+        "couleur": "#B0392E"
+      },
+      "bornes": [
+        {
+          "forme": "ronde",
+          "position": [
+            13.2,
+            0.25
+          ],
+          "z": 0.15
+        },
+        {
+          "forme": "triangulaire",
+          "position": [
+            13.2,
+            -0.9
+          ],
+          "z": 1.45
+        }
+      ],
+      "texte": "Bornes officielles et limite oblique de 11,70 m (plans de 1991 et 2015). Position indicative, à fixer par un géomètre."
+    },
+    {
+      "id": 15,
+      "ancre": [4.5, 6.5, -0.6],
+      "groupe": "eau",
+      "nom": "Eau sous la maison",
+      "type": "nappe",
+      "centre": [
+        4.5,
+        4
+      ],
+      "z": -0.6,
+      "rayon_x": 4.0,
+      "rayon_y": 2.5,
+      "texte": "Eau constatée sous la maison. Les flèches montrent un écoulement probable, à vérifier par l'expert."
+    }
+  ],
+  "fleches_eau_vue_ensemble": [
+    [
+      [
+        21,
+        -6.2,
+        1.4
+      ],
+      [
+        19,
+        -4.2,
+        1.4
+      ]
+    ],
+    [
+      [
+        2,
+        -4.5,
+        1.4
+      ],
+      [
+        2,
+        -1.6,
+        1.4
+      ]
+    ],
+    [
+      [
+        5.5,
+        -4.5,
+        1.4
+      ],
+      [
+        5.5,
+        -1.6,
+        1.4
+      ]
+    ],
+    [
+      [
+        9,
+        -4.5,
+        1.4
+      ],
+      [
+        9,
+        -1.6,
+        1.4
+      ]
+    ],
+    [
+      [
+        6,
+        -0.2,
+        0.0
+      ],
+      [
+        6,
+        2.4,
+        -0.2
+      ]
+    ]
+  ],
+  "sous_sol": {
+    "_note": "Issu de la coupe sous_fondation.py, qui est schématique. Abscisse de coupe s (0 = regard, 11 = façade) convertie en y du plan par y = (11 - s) × 0,851. Plan de coupe proposé : x = 4,5 (milieu de la maison). Positions du regard et des WC : à vérifier sur place.",
+    "plan_de_coupe_x": 4.5,
+    "fondations": [
+      {
+        "nom": "fondation arrière (côté regard)",
+        "y0": 7.6,
+        "y1": 8.05,
+        "z0": -1.2,
+        "z1": 0.25,
+        "materiau": "moellons"
+      },
+      {
+        "nom": "fondation de la façade (côté voisins)",
+        "y0": -0.05,
+        "y1": 0.4,
+        "z0": -1.2,
+        "z1": 0.25,
+        "materiau": "maçonnerie de 1820, environ 1,20 m"
+      }
+    ],
+    "trou_fondation_arriere": {
+      "y": 7.8,
+      "z": -0.6,
+      "largeur": 0.5,
+      "hauteur": 0.22
+    },
+    "vide_sanitaire": {
+      "y0": 0.4,
+      "y1": 7.6,
+      "z0": -0.93,
+      "z1": 0.07
+    },
+    "plancher": {
+      "z": 0.25,
+      "epaisseur": 0.18
+    },
+    "regard": {
+      "centre": [
+        4.5,
+        8.65
+      ],
+      "cote": 0.9,
+      "z0": -1.55,
+      "z1": 0.05,
+      "contenu": "boue et cailloux au fond"
+    },
+    "collecteur": {
+      "de": [
+        4.5,
+        8.26,
+        -0.95
+      ],
+      "a": [
+        4.5,
+        5.1,
+        -0.95
+      ],
+      "diametre": 0.18
+    },
+    "wc": [
+      {
+        "nom": "WC 1",
+        "position": [
+          4.5,
+          6.8
+        ],
+        "z": 0.25
+      },
+      {
+        "nom": "WC 2",
+        "position": [
+          4.5,
+          5.45
+        ],
+        "z": 0.25
+      }
+    ],
+    "points_interrogation": {
+      "_note": "Décision du 23/11/2026 : deux points, comme la planche 2, couleur encre (le rouge est réservé à la limite). Zones que personne n'a encore vues.",
+      "couleur": "encre",
+      "points": [
+        {
+          "nom": "joints de la fondation de façade",
+          "position": [
+            4.5,
+            0.17,
+            -1.25
+          ]
+        },
+        {
+          "nom": "trou de la fondation arrière",
+          "position": [
+            4.5,
+            7.8,
+            -0.35
+          ]
+        }
+      ]
+    },
+    "electricite_gaz": {
+      "position": [
+        4.5,
+        2.2
+      ],
+      "z": 1.5
+    },
+    "cote_voisins": {
+      "_note": "Décision du 23/11/2026 : pas de rondins dans la coupe à x = 4,5 (planche 1 : rondins seulement à droite de l'annexe). Ordre dans la coupe : façade, espace de 3 cm, mur.",
+      "espace_3cm": {
+        "y0": -0.08,
+        "y1": -0.05,
+        "exagere_visuellement": true
+      },
+      "mur": {
+        "y0": -0.33,
+        "y1": -0.08,
+        "z0": 0,
+        "z1": 1.35
+      },
+      "remblai": {
+        "z0": 0,
+        "z1": 1.3,
+        "materiau": "terre argileuse"
+      }
+    }
+  },
+  "parcours_eau_sous_la_maison": [
+    {
+      "etape": "A",
+      "couleur": "eau",
+      "texte": "La pluie tombe sur la dalle et le remblai des voisins ; sur le béton, elle ruisselle vers le mur.",
+      "trajet": [
+        [
+          4.5,
+          -6,
+          2.5
+        ],
+        [
+          4.5,
+          -3,
+          1.35
+        ]
+      ]
+    },
+    {
+      "etape": "B",
+      "couleur": "eau",
+      "texte": "Dans le remblai argileux, elle s'infiltre et descend vers le point bas, côté Paula.",
+      "trajet": [
+        [
+          4.5,
+          -3,
+          1.3
+        ],
+        [
+          4.5,
+          -0.8,
+          0.3
+        ]
+      ]
+    },
+    {
+      "etape": "C",
+      "couleur": "eau",
+      "texte": "Sans drainage visible, elle s'accumule au pied du mur.",
+      "trajet": [
+        [
+          4.5,
+          -0.8,
+          0.3
+        ],
+        [
+          4.5,
+          -0.6,
+          0.05
+        ]
+      ]
+    },
+    {
+      "etape": "D",
+      "couleur": "eau",
+      "texte": "Elle descend le long du mur, dans l'espace de 3 cm contre la façade.",
+      "trajet": [
+        [
+          4.5,
+          -0.6,
+          0.0
+        ],
+        [
+          4.5,
+          -0.07,
+          -0.1
+        ],
+        [
+          4.5,
+          -0.07,
+          -1.05
+        ]
+      ]
+    },
+    {
+      "etape": "E",
+      "couleur": "eau",
+      "texte": "Elle contourne la fondation ou la traverse par ses joints, et peut emporter la terre dessous.",
+      "trajet": [
+        [
+          4.5,
+          -0.07,
+          -1.3
+        ],
+        [
+          4.5,
+          0.2,
+          -1.35
+        ],
+        [
+          4.5,
+          0.8,
+          -1.0
+        ]
+      ]
+    },
+    {
+      "etape": "F",
+      "couleur": "eau",
+      "texte": "Elle forme une nappe dans le vide sanitaire, chargée de boue et de petits cailloux.",
+      "trajet": [
+        [
+          4.5,
+          0.8,
+          -0.7
+        ],
+        [
+          4.5,
+          2.1,
+          -0.72
+        ]
+      ]
+    },
+    {
+      "etape": "G",
+      "couleur": "boue",
+      "texte": "Quand le niveau monte, elle ressort par le trou de la fondation, côté regard.",
+      "trajet": [
+        [
+          4.5,
+          7.4,
+          -0.6
+        ],
+        [
+          4.5,
+          8.26,
+          -0.6
+        ]
+      ]
+    },
+    {
+      "etape": "H",
+      "couleur": "boue",
+      "texte": "Elle tombe dans le regard avec la boue et les cailloux.",
+      "trajet": [
+        [
+          4.5,
+          8.4,
+          -0.6
+        ],
+        [
+          4.5,
+          8.65,
+          -1.45
+        ]
+      ]
+    },
+    {
+      "etape": "I",
+      "couleur": "boue",
+      "texte": "Les dépôts bouchent la canalisation : les deux WC se bouchent ou refoulent.",
+      "trajet": [
+        [
+          4.5,
+          8.26,
+          -0.95
+        ],
+        [
+          4.5,
+          5.45,
+          -0.95
+        ],
+        [
+          4.5,
+          5.45,
+          0.25
+        ]
+      ]
+    },
+    {
+      "etape": "J",
+      "couleur": "eau",
+      "texte": "Par capillarité, l'humidité monte dans les murs et les pièces.",
+      "trajet": [
+        [
+          4.5,
+          0.2,
+          0.0
+        ],
+        [
+          4.5,
+          0.2,
+          2.5
+        ]
+      ]
+    }
+  ],
+  "parcours_pluie_7_etapes": [
+    {
+      "n": 1,
+      "titre": "Le toit des voisins",
+      "texte": "La pluie est collectée par les gouttières. Où se déversent les descentes d'eau ? À vérifier."
+    },
+    {
+      "n": 2,
+      "titre": "Les surfaces en béton",
+      "texte": "Dalle, douche et seconde construction ne laissent pas l'eau pénétrer : elle ruisselle vers la limite."
+    },
+    {
+      "n": 3,
+      "titre": "Le remblai de 1,30 m",
+      "texte": "Sur la terre argileuse rehaussée, l'eau s'infiltre puis descend vers le point bas, côté Paula."
+    },
+    {
+      "n": 4,
+      "titre": "L'ancien écoulement",
+      "texte": "Le chemin qui évacuait l'eau vers la rue a disparu sous le remblai et les murs."
+    },
+    {
+      "n": 5,
+      "titre": "Le pied du mur",
+      "texte": "Sans drainage visible, l'eau s'accumule derrière le mur, passe sous les rondins sans fondation et dans l'espace de 3 cm."
+    },
+    {
+      "n": 6,
+      "titre": "Sous la maison",
+      "texte": "Elle atteint les fondations de 1820 (environ 1,20 m) et le vide sanitaire, en entraînant terre et graviers vers le regard."
+    },
+    {
+      "n": 7,
+      "titre": "Dans les murs",
+      "texte": "Par remontée capillaire, l'humidité gagne les murs et les pièces, près de l'électricité et du gaz."
+    }
+  ],
+  "ancien_ecoulement": {
+    "_note": "Décision du 23/11/2026 : trajet estimé d'après la planche 3 (étape 4 de la pluie). Pointillés, croix, mention obligatoire.",
+    "etape_pluie": 4,
+    "style": "pointilles",
+    "mention": "tracé supposé",
+    "trajet": [
+      [
+        14,
+        1.5,
+        0.02
+      ],
+      [
+        23.5,
+        4,
+        0.02
+      ]
+    ],
+    "croix": [
+      18.5,
+      2.7,
+      0.02
+    ]
+  },
+  "legende_eau": {
+    "convention": "Trait plein : surface ; pointillé : dans le sol, supposé.",
+    "racines": "Effet possible des racines sur les fondations : à vérifier par l'expert."
+  },
+  "a_verifier_affiche": [
+    "Position exacte du regard et des deux WC : à vérifier.",
+    "Destination des gouttières des voisins : à vérifier."
+  ],
+  "verifications_expert": [
+    "Inspection de la canalisation par caméra : joint ouvert, fissure, racines ?",
+    "État de la fondation : joints, fissures, terre emportée dessous ?",
+    "Origine de l'eau : test au colorant depuis le terrain des voisins",
+    "Présence d'un drainage derrière le mur des voisins",
+    "Destination des gouttières des voisins",
+    "Taux d'humidité, pièce par pièce, et sécurité électricité et gaz"
+  ],
+  "mentions_obligatoires": [
+    "Schéma explicatif, non à l'échelle, d'après les plans de 1991 et 2015 et les indications de Paula.",
+    "Ce schéma ne prouve ni la position exacte de la limite, ni la cause des dégâts : c'est le rôle de l'expert.",
+    "Ce n'est pas un plan. Pour le tribunal : plans authentiques, constat d'huissier et rapport d'expertise."
+  ]
+}

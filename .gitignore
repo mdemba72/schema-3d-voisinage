@@ -1,0 +1,19 @@
+# Dépendances et sorties
+node_modules/
+dist/
+shots/
+coverage/
+playwright-report/
+test-results/
+
+# Planches de référence : contiennent des noms et des adresses, ne jamais publier
+reference/
+
+# Secrets et fichiers locaux
+.env
+.env.*
+*.local
+.claude/settings.local.json
+
+# Service worker de développement (vite-plugin-pwa)
+dev-dist/

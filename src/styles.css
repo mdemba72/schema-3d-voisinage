@@ -1,0 +1,919 @@
+/* Jetons du « carnet de l'expert » : valeurs de scene-spec.json > palette. */
+:root {
+  --papier: #edf1f0;
+  --encre: #1f2a36;
+  --attenue: #5e6b77;
+  --eau: #1584d4;
+  --limite: #b0392e;
+  --boue: #8a6a3e;
+
+  --serif: 'Newsreader', Georgia, serif;
+  --sans: 'Public Sans', system-ui, sans-serif;
+
+  --t14: 0.875rem;
+  --t16: 1rem;
+  --t20: 1.25rem;
+  --t28: 1.75rem;
+
+  --gouttiere: 16px;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100dvh;
+}
+
+body {
+  background: var(--papier);
+  color: var(--encre);
+  font-family: var(--sans);
+  font-size: var(--t16);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--eau);
+  outline-offset: 2px;
+}
+
+.lecteur {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Mise en page : scène plein écran, en-tête et panneau par-dessus en portrait ;
+   panneau à droite en paysage. */
+.app {
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.zone-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.canvas-3d {
+  position: absolute !important;
+  inset: 0;
+  touch-action: none;
+}
+
+@media (orientation: landscape) {
+  .app {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+
+  .zone-scene {
+    position: relative;
+    inset: auto;
+  }
+}
+
+/* En-tête : titre court, « À propos », onglets de mode. */
+.entete {
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(env(safe-area-inset-top) + 8px) calc(env(safe-area-inset-right) + var(--gouttiere))
+    10px calc(env(safe-area-inset-left) + var(--gouttiere));
+  background: var(--papier);
+}
+
+.entete-ligne {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.entete h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--t20);
+  line-height: 1.25;
+}
+
+.modes {
+  display: flex;
+  margin-top: 4px;
+  border: 1.5px solid var(--encre);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mode {
+  flex: 1 1 auto;
+  min-height: 42px;
+  padding: 0 8px;
+  border: 0;
+  background: var(--papier);
+  color: var(--encre);
+  font: inherit;
+  font-size: var(--t14);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.mode + .mode {
+  border-left: 1px solid var(--encre);
+}
+
+.mode[aria-selected='true'] {
+  background: var(--encre);
+  color: var(--papier);
+}
+
+.mode:focus-visible {
+  outline-offset: -4px;
+  outline-color: var(--eau);
+}
+
+.recentrer {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: calc(env(safe-area-inset-right) + var(--gouttiere));
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--encre);
+  border-radius: 22px;
+  background: var(--papier);
+  color: var(--encre);
+  font: inherit;
+  font-size: var(--t14);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Mention fixe du mode « Sous la maison ». */
+.mention-mode {
+  margin: 6px 0 0;
+  color: var(--encre);
+  font-family: var(--serif);
+  font-size: var(--t14);
+  line-height: 1.35;
+}
+
+/* Paysage : en-tête sur une ligne, « Recentrer » en bas à droite de la scène. */
+@media (orientation: landscape) {
+  .entete {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: calc(env(safe-area-inset-top) + 6px);
+    padding-bottom: 6px;
+  }
+
+  .entete-ligne {
+    display: contents;
+  }
+
+  /* Pas la place pour le titre à côté des onglets : il reste lu par les lecteurs d'écran. */
+  .entete h1 {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .modes {
+    flex: 1;
+    order: 1;
+    margin-top: 0;
+  }
+
+  .entete-ligne .bouton-texte {
+    order: 2;
+    flex: none;
+  }
+
+  .entete {
+    flex-wrap: wrap;
+    row-gap: 2px;
+  }
+
+  .mention-mode {
+    order: 3;
+    flex-basis: 100%;
+    margin: 0;
+  }
+
+  .recentrer {
+    position: fixed;
+    top: auto;
+    right: calc(340px + var(--gouttiere));
+    bottom: calc(env(safe-area-inset-bottom) + 12px);
+  }
+}
+
+/* Panneau bas (portrait) : feuille plate à filet d'encre, sans ombre, trois hauteurs. */
+.feuille {
+  position: absolute;
+  z-index: 40;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--papier);
+  border-top: 1px solid var(--encre);
+  transition: height 220ms ease-out;
+}
+
+.feuille[data-glisse='true'] {
+  transition: none;
+}
+
+.feuille-tete {
+  flex: none;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  padding: 0 calc(env(safe-area-inset-right) + var(--gouttiere)) 8px
+    calc(env(safe-area-inset-left) + var(--gouttiere));
+  cursor: grab;
+}
+
+.poignee {
+  display: block;
+  width: 100%;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.poignee::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin: 8px auto 0;
+  border-radius: 2px;
+  background: var(--attenue);
+}
+
+.panneau-titre h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--t16);
+  line-height: 1.3;
+}
+
+.panneau-titre p {
+  margin: 0;
+  color: var(--attenue);
+  font-size: var(--t14);
+  line-height: 1.4;
+}
+
+.feuille-corps {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px calc(env(safe-area-inset-right) + var(--gouttiere))
+    calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + var(--gouttiere));
+}
+
+/* Panneau à droite (paysage). */
+.colonne {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--papier);
+  border-left: 1px solid var(--encre);
+  padding: calc(env(safe-area-inset-top) + 16px) calc(env(safe-area-inset-right) + var(--gouttiere))
+    calc(env(safe-area-inset-bottom) + 24px) var(--gouttiere);
+}
+
+.colonne .panneau-titre {
+  margin-bottom: 12px;
+}
+
+.panneau-mention {
+  margin: 24px 0 0;
+  color: var(--attenue);
+  font-size: var(--t14);
+}
+
+.panneau-vide {
+  margin: 8px 0 0;
+  font-family: var(--serif);
+}
+
+/* Écrans plein cadre : accueil et « À propos ». */
+.ecran {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  overflow-y: auto;
+  background: var(--papier);
+}
+
+.ecran-page {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 40px) calc(env(safe-area-inset-right) + var(--gouttiere))
+    calc(env(safe-area-inset-bottom) + 32px) calc(env(safe-area-inset-left) + var(--gouttiere));
+}
+
+.ecran h1 {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--t28);
+  line-height: 1.2;
+}
+
+.ecran h1:focus {
+  outline: none;
+}
+
+.ecran h2 {
+  margin: 24px 0 4px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--t16);
+}
+
+.ecran p {
+  margin: 0;
+}
+
+.ecran-intro {
+  margin-bottom: 24px !important;
+  font-family: var(--serif);
+  font-size: var(--t20);
+  line-height: 1.45;
+}
+
+.mentions {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--encre);
+  color: var(--attenue);
+  font-size: var(--t14);
+}
+
+.mentions li + li {
+  margin-top: 8px;
+}
+
+.bouton-principal {
+  display: block;
+  min-height: 48px;
+  margin-top: 32px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--encre);
+  color: var(--papier);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Pastilles des repères : chiffre blanc sur encre ; 14 sur rouge limite, 15 sur bleu eau ;
+   contour papier de 2,5 px. Cible tactile de 44 px par un pseudo-élément. */
+.pastille {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2.5px solid var(--papier);
+  border-radius: 50%;
+  background: var(--encre);
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pastille[data-ton='limite'] {
+  background: var(--limite);
+}
+
+/* Bleu eau à peine assombri : chiffre blanc lisible (contraste AA 4,7:1 au lieu de 4:1). */
+.pastille[data-ton='eau'] {
+  background: #1478c0;
+}
+
+button.pastille::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+}
+
+button.pastille[aria-pressed='true'] {
+  box-shadow: 0 0 0 2px var(--encre);
+  transform: scale(1.15);
+}
+
+.pastille[data-taille='petite'] {
+  width: 24px;
+  height: 24px;
+  border-width: 0;
+  font-size: 12px;
+  cursor: inherit;
+}
+
+.legende-groupe + .legende-groupe {
+  margin-top: 20px;
+}
+
+.legende-tete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.legende-tete h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--t16);
+  line-height: 1.3;
+}
+
+.legende-groupe ul {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+
+.legende-ligne {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.legende-ligne:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.legende-note {
+  margin: 4px 0 0;
+  color: var(--attenue);
+  font-size: var(--t14);
+}
+
+/* Interrupteur de calque : piste à filet d'encre, plein quand le calque est affiché. */
+.interrupteur {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.interrupteur::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 11px;
+  height: 22px;
+  border: 1.5px solid var(--encre);
+  border-radius: 11px;
+  background: var(--papier);
+}
+
+.interrupteur::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 7px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--attenue);
+  transition: transform 150ms ease-out;
+}
+
+.interrupteur[aria-checked='true']::before {
+  background: var(--encre);
+}
+
+.interrupteur[aria-checked='true']::after {
+  background: var(--papier);
+  transform: translateX(18px);
+}
+
+.interrupteur-texte {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* Fiche d'un repère. */
+.fiche-groupe {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--attenue);
+  font-size: var(--t14);
+}
+
+.fiche h3 {
+  margin: 8px 0 8px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--t20);
+  line-height: 1.25;
+}
+
+.fiche h3:focus {
+  outline: none;
+}
+
+.fiche-texte {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--t16);
+  line-height: 1.6;
+  max-width: 34rem;
+}
+
+.bouton-texte {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--encre);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* Mode « Quand il pleut » : indicateur d'étapes et navigation. */
+.avertissement {
+  margin: 0 0 12px;
+  color: var(--attenue);
+  font-size: var(--t14);
+}
+
+.etapes-liste {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.etapes-liste li {
+  flex: 1;
+}
+
+.etape-point {
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--encre);
+  border-radius: 6px;
+  background: var(--papier);
+  color: var(--encre);
+  font: inherit;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.etape-point[aria-current='step'] {
+  background: var(--encre);
+  color: var(--papier);
+}
+
+.etapes-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.bouton-secondaire {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--encre);
+  border-radius: 6px;
+  background: var(--papier);
+  color: var(--encre);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bouton-secondaire:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pluie .fiche h3 {
+  margin-top: 0;
+}
+
+/* Résumé d'une étape dans la tête du panneau : une seule ligne. */
+.resume-etape {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Lettre d'étape du parcours sous la maison : eau (A à F, J) ou boue (G à I). */
+.lettre-etape {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  border: 2.5px solid var(--papier);
+  border-radius: 50%;
+  outline: 1px solid var(--encre);
+  background: var(--eau);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: var(--t14);
+  vertical-align: 2px;
+}
+
+.lettre-etape[data-couleur='boue'] {
+  background: var(--boue);
+}
+
+/* Dix étapes A à J : deux rangées de cinq à 390 px, cibles de 44 px. */
+.etapes-liste {
+  flex-wrap: wrap;
+}
+
+.etapes-liste li {
+  min-width: 44px;
+}
+
+.etapes-liste:has(li:nth-child(8)) li {
+  flex: 1 0 calc((100% - 16px) / 5);
+}
+
+/* Étiquettes posées dans la scène : point d'interrogation, « tracé supposé ». */
+.interrogation {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--encre);
+  border-radius: 50%;
+  background: var(--papier);
+  color: var(--encre);
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--t20);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Coupe : point posé au-dessus de la zone, pour ne pas masquer le trou ni le filet. */
+.interrogation-coupe {
+  width: 26px;
+  height: 26px;
+  font-size: var(--t16);
+  transform: translate(-50%, -100%);
+}
+
+.etiquette-scene {
+  display: block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--papier) 90%, transparent);
+  color: var(--encre);
+  font-size: var(--t14);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interrupteur::after,
+  .feuille {
+    transition: none;
+  }
+}
+
+/* Mode « Vérifications de l'expert » : cases à filet d'encre, ligne choisie soulignée d'un trait. */
+.verifs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.verif {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  border-top: 1px solid color-mix(in srgb, var(--encre) 18%, transparent);
+}
+
+.verif:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--encre) 18%, transparent);
+}
+
+.verif-case {
+  appearance: none;
+  flex: none;
+  display: grid;
+  place-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 4px 0 0 -10px;
+  background: none;
+  cursor: pointer;
+}
+
+.verif-case::before {
+  content: '';
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--encre);
+  border-radius: 3px;
+  background: var(--papier);
+}
+
+.verif-case:checked::before {
+  background:
+    no-repeat center / 14px
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2 7.5l3.2 3L12 3.5' fill='none' stroke='%23edf1f0' stroke-width='2.2'/%3E%3C/svg%3E"),
+    var(--encre);
+}
+
+.verif-case:focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: -4px;
+}
+
+.verif-texte {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 44px;
+  padding: 12px 0 10px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-family: var(--serif);
+  font-size: var(--t16);
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+
+.verif[data-coche='true'] .verif-texte > span:first-child {
+  color: var(--attenue);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.verif-zone {
+  font-family: var(--sans);
+  font-size: var(--t14);
+  color: var(--attenue);
+}
+
+.verif[data-choisi='true'] .verif-zone {
+  color: var(--encre);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.verifs-pied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.verifs-pied p {
+  margin: 0;
+  color: var(--attenue);
+  font-size: var(--t14);
+  font-variant-numeric: tabular-nums;
+}
+
+.bouton-texte:disabled {
+  color: var(--attenue);
+  text-decoration: none;
+  cursor: default;
+}
+
+/* « À propos » : avis en serif, listes simples à tiret court. */
+.ecran .apropos-avis {
+  margin-top: 16px;
+  font-family: var(--serif);
+  font-size: var(--t16);
+  line-height: 1.6;
+}
+
+.apropos-liste {
+  margin: 0;
+  padding-left: 1.3em;
+  list-style: '–  ';
+}
+
+.apropos-liste li + li {
+  margin-top: 4px;
+}
+
+.etiquette-zone {
+  border: 1.5px solid var(--encre);
+  font-weight: 600;
+}
+
+.chargement {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--attenue);
+  font-size: var(--t14);
+}
+
+/* Repli sans WebGL : la planche en image, dans la zone de la scène. */
+.repli {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0 var(--gouttiere);
+}
+
+.repli figcaption {
+  margin: 8px 0;
+  font-family: var(--serif);
+  font-size: var(--t16);
+}
+
+.repli img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Sans 3D, rien à recentrer. */
+.sans-3d .recentrer {
+  display: none;
+}

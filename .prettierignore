@@ -1,0 +1,7 @@
+dist
+dev-dist
+shots
+reference
+node_modules
+*.md
+docs/scene-spec.json
