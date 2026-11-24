@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { cadrageCoupe, cadrageEtapeSous, ETAPES_SOUS, longueursCumulees, pointSur } from './sousSol'
+import { troncons } from './troncons'
 
 describe('parcours sous la maison', () => {
   it('contient les 10 étapes A à J, sur le plan de coupe', () => {
@@ -34,5 +35,21 @@ describe('parcours sous la maison', () => {
       }
     }
     expect(cadrageCoupe()).toHaveLength(4)
+  })
+
+  it('trace en pointillés les parties dans le sol, en trait plein celles en surface', () => {
+    const type = (l: string) =>
+      troncons(ETAPES_SOUS.find((e) => e.etape === l)!.trajet).map((t) => t.sol)
+    // A : la pluie sur la dalle et le remblai, en surface.
+    expect(type('A')).toEqual([false])
+    // B à H : dans le remblai, contre la fondation, sous la maison.
+    for (const l of 'BCDEFGH') expect(type(l).every(Boolean)).toBe(true)
+    // I : le collecteur (dans le sol), puis la descente des WC (au-dessus du sol).
+    expect(type('I')).toEqual([true, false])
+    // Les tronçons se suivent sans trou.
+    for (const e of ETAPES_SOUS) {
+      const t = troncons(e.trajet)
+      expect(t.flatMap((x, k) => (k === 0 ? x.points : x.points.slice(1)))).toEqual(e.trajet)
+    }
   })
 })

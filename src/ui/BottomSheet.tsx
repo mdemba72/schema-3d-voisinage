@@ -28,7 +28,7 @@ function Fiche({ id }: { id: number }) {
     <article className="fiche" aria-labelledby="fiche-titre">
       <p className="fiche-groupe">
         <Pastille el={el} />
-        <span className="lecteur">Repère {el.id}, </span>
+        {!el.sans_pastille && <span className="lecteur">Repère {el.id}, </span>}
         <span>{nomCalque(el.groupe)}</span>
       </p>
       <h3 id="fiche-titre" ref={titre} tabIndex={-1}>

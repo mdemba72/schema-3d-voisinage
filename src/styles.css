@@ -917,3 +917,20 @@ button.pastille[aria-pressed='true'] {
 .sans-3d .recentrer {
   display: none;
 }
+
+/* Élément sans numéro de repère (bambous) : point à l'encre, même emprise qu'une petite pastille. */
+.pastille-vide {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+
+.pastille-vide::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--encre);
+}

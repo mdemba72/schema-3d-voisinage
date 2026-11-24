@@ -13,7 +13,10 @@ const NOTES: Record<string, string[]> = {
   E: ["Point d'interrogation : zone que personne n'a encore vue."],
   G: ["Point d'interrogation : zone que personne n'a encore vue."],
   H: [scene.a_verifier_affiche[0]!],
-  I: [scene.a_verifier_affiche[0]!],
+  I: [
+    scene.a_verifier_affiche[0]!,
+    'Un WC au rez-de-chaussée, un à l’étage, sur une descente commune : positions indicatives.',
+  ],
 }
 
 // Mode « Sous la maison » : étapes A à J, une à la fois, avec lecture automatique.
@@ -68,6 +71,7 @@ export function UnderSteps() {
             {t}
           </p>
         ))}
+        <p className="legende-note">{scene.legende_eau.convention}</p>
       </article>
     </div>
   )

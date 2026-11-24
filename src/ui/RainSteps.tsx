@@ -6,9 +6,10 @@ const etapes = scene.parcours_pluie_7_etapes
 
 /**
  * Notes de la spécification rattachées à certaines étapes. L'étape 1 dit déjà « À vérifier »
- * pour les gouttières (a_verifier_affiche) : pas de doublon.
+ * pour la destination des gouttières ; elle ajoute la question du raccordement (a_verifier_affiche[2]).
  */
 const NOTES: Record<number, string[]> = {
+  1: [scene.a_verifier_affiche[2]!],
   4: [
     `${scene.ancien_ecoulement.mention[0]!.toUpperCase()}${scene.ancien_ecoulement.mention.slice(1)}.`,
     scene.legende_eau.convention,

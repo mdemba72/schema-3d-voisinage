@@ -43,7 +43,8 @@ try {
   await page.waitForTimeout(1500)
   await capture(page, 'expert')
   const boutons = page.locator('button.verif-texte')
-  for (let i = 0; i < 6; i++) {
+  const n = await boutons.count()
+  for (let i = 0; i < n; i++) {
     await boutons.nth(i).click()
     await page.waitForTimeout(2000)
     await capture(page, `expert-${i + 1}`)

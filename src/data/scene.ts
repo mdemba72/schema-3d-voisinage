@@ -82,6 +82,8 @@ interface ElementBase {
   nom: string
   texte: string
   etiquette?: string
+  /** Élément sans numéro de repère : pas de pastille, fiche ouverte en touchant l'objet. */
+  sans_pastille?: boolean
 }
 
 export interface ElementMaison extends ElementBase {
@@ -183,6 +185,14 @@ export interface ElementRondins extends ElementBase {
   y1: number
   z0: number
   hauteur: number
+  /** Hauteur de chaque rondin (profil irrégulier), sinon « hauteur » pour tous. */
+  hauteurs?: number[]
+}
+
+export interface ElementBambous extends ElementBase {
+  type: 'bambous'
+  hauteur: number
+  positions: Point2[]
 }
 
 export interface Borne {
@@ -218,6 +228,7 @@ export type Element =
   | ElementRondins
   | ElementLimite
   | ElementNappe
+  | ElementBambous
 
 export type Fleche = [Point3, Point3]
 
@@ -239,7 +250,11 @@ export interface SousSol {
   plancher: { z: number; epaisseur: number }
   regard: { centre: Point2; cote: number; z0: number; z1: number; contenu: string }
   collecteur: { de: Point3; a: Point3; diametre: number }
-  wc: { nom: string; position: Point2; z: number }[]
+  wc: { nom: string; niveau: string; position: Point2; z: number }[]
+  /** Plancher de l'étage (WC 2). */
+  etage: { z: number; epaisseur: number }
+  /** Descente verticale commune des deux WC vers le collecteur. */
+  descente_commune: { y: number; z0: number; z1: number }
   points_interrogation: {
     _note: string
     couleur: NomCouleur
@@ -290,6 +305,8 @@ export interface SceneSpec {
   parcours_eau_sous_la_maison: EtapeSousLaMaison[]
   parcours_pluie_7_etapes: EtapePluie[]
   ancien_ecoulement: AncienEcoulement
+  /** Descentes de gouttière, positions indicatives (à vérifier). */
+  descentes_gouttieres: { _note: string; rayon: number; voisine: Point2[]; paula: Point2[] }
   legende_eau: { convention: string; racines: string }
   a_verifier_affiche: string[]
   verifications_expert: string[]
@@ -302,7 +319,10 @@ export const scene = brut as unknown as SceneSpec
 
 export const palette = scene.palette
 
-/** Retourne l'élément de la spécification par son numéro de repère (1 à 15). */
+/** Éléments qui ont un numéro de repère (pastille) : les 15 repères de la planche. */
+export const elementsReperes = scene.elements.filter((e) => !e.sans_pastille)
+
+/** Retourne l'élément de la spécification par son numéro (1 à 15, puis éléments sans pastille). */
 export function elementParId(id: number): Element {
   const el = scene.elements.find((e) => e.id === id)
   if (!el) throw new Error(`Repère ${id} absent de scene-spec.json`)

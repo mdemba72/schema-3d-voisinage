@@ -15,6 +15,8 @@ import { Rain } from './Rain'
 import { ShowerShed } from './ShowerShed'
 import { Slab } from './Slab'
 import { ZoneExpert } from './ZoneExpert'
+import { Bambous } from './Bambous'
+import { Descentes } from './Descentes'
 import { Vegetation } from './Vegetation'
 import { Wall } from './Wall'
 import { WaterPath } from './WaterPath'
@@ -91,6 +93,8 @@ export function Scene3D() {
       <Slab />
       <ShowerShed />
       {!sous && <Vegetation />}
+      {!sous && <Bambous />}
+      <Descentes />
       <Boundary />
       {!sous && <WaterPath />}
       <Rain />

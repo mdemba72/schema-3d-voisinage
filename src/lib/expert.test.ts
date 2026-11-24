@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ecrireCoches, lireCoches, VERIFS, zoneVerif } from './expert'
+import { ecrireCoches, lireCoches, VERIFS, ZONES, zoneVerif } from './expert'
 
 const memoire = new Map<string, string>()
 beforeEach(() => {
@@ -16,8 +16,9 @@ beforeEach(() => {
 })
 
 describe("vérifications de l'expert", () => {
-  it('contient les 6 vérifications de la spécification', () => {
-    expect(VERIFS).toHaveLength(6)
+  it('contient les 7 vérifications de la spécification, une zone pour chacune', () => {
+    expect(VERIFS).toHaveLength(7)
+    expect(ZONES).toHaveLength(VERIFS.length)
   })
 
   it('rattache chaque vérification à une zone de la scène', () => {

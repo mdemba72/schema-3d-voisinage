@@ -50,6 +50,9 @@ export function cadrageEtapeSous(i: number): Point3[] {
   ])
 }
 
+/** Haut du cadrage d'ensemble : au-dessus du WC de l'étage. */
+const HAUT_COUPE = scene.sous_sol.etage.z + 1.2
+
 /**
  * Cadrage d'ensemble de la coupe : du remblai (début du trajet A) au regard,
  * du fond du regard au faîtage de la maison de Paula.
@@ -62,7 +65,7 @@ export function cadrageCoupe(): Point3[] {
   return [
     [COUPE_X, yMin, regard.z0],
     [COUPE_X, yMax, regard.z0],
-    [COUPE_X, yMin, 3],
-    [COUPE_X, yMax, 3],
+    [COUPE_X, yMin, HAUT_COUPE],
+    [COUPE_X, yMax, HAUT_COUPE],
   ]
 }

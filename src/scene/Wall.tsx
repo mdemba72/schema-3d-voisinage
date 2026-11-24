@@ -42,13 +42,15 @@ export function Wall() {
       <Calque groupe={rondins.groupe}>
         {Array.from({ length: rondins.nombre }, (_, i) => {
           const x = rondins.x_depart + i * rondins.pas + rondins.largeur / 2
+          // Profil irrégulier : une hauteur par rondin quand la spécification la donne.
+          const h = rondins.hauteurs?.[i] ?? rondins.hauteur
           return (
             <mesh
               key={i}
-              position={[x, rondins.z0 + rondins.hauteur / 2, (rondins.y0 + rondins.y1) / 2]}
+              position={[x, rondins.z0 + h / 2, (rondins.y0 + rondins.y1) / 2]}
               castShadow
             >
-              <boxGeometry args={[rondins.largeur, rondins.hauteur, prof]} />
+              <boxGeometry args={[rondins.largeur, h, prof]} />
               <Mat couleur={palette.beton} />
               <Aretes repere={rondins.id} />
             </mesh>

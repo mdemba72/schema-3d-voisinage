@@ -1,4 +1,11 @@
-import { elementParId, scene, type ElementMaison, type Point2, type Point3 } from '../data/scene'
+import {
+  elementParId,
+  elementsDeType,
+  scene,
+  type ElementMaison,
+  type Point2,
+  type Point3,
+} from '../data/scene'
 import { lire, ecrire } from './stockage'
 
 // Mode « Vérifications de l'expert » : les 6 points de scene-spec.json, chacun rattaché
@@ -14,6 +21,7 @@ export const ZONES = [
   'le pied du mur',
   'le toit voisin',
   'la maison de Paula',
+  'les arbres',
 ]
 
 function boite(m: ElementMaison, zHaut = m.z0 + m.hauteur_murs + m.faitage): Point3[] {
@@ -69,6 +77,15 @@ export function zoneVerif(i: number): Point3[] {
       const egout = m.z0 + m.hauteur_murs
       return boite(m).map(([x, y, z]): Point3 => [x, y, z === m.z0 ? egout : z])
     }
+    case 6: {
+      // Racines : les arbres des voisins et de Paula, près des fondations (au sol).
+      const rangee = (elementParId(7) as unknown as { positions: Point2[] }).positions
+      const bambous = elementsDeType('bambous').flatMap((b) => b.positions)
+      return [...rangee, ...bambous].flatMap(([x, y]): Point3[] => [
+        [x, y, -0.5],
+        [x, y, 3],
+      ])
+    }
     default:
       // Humidité, électricité et gaz : la maison de Paula.
       return boite(maisonPaula())
@@ -80,6 +97,12 @@ export function repereVerif(i: number): Point3 {
   if (i === 0) {
     const [cx, cy] = scene.sous_sol.regard.centre
     return [cx, cy, 1.6]
+  }
+  if (i === 6) {
+    // Racines : au pied de la rangée de tilleuls, entre le mur et la maison de Paula.
+    const rangee = (elementParId(7) as unknown as { positions: Point2[] }).positions
+    const [x, y] = rangee[Math.floor(rangee.length / 2)]!
+    return [x, y, 2.2]
   }
   const z = zoneVerif(i)
   const s = z.reduce((a, p) => [a[0] + p[0], a[1] + p[1], a[2] + p[2]], [0, 0, 0])

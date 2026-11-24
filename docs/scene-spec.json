@@ -232,7 +232,7 @@
       "faitage": 3.3,
       "faitage_parallele_a": "x",
       "etiquette": "Maison voisine",
-      "texte": "Maison des voisins, construite sur leur terrain, plus haut que celui de Paula."
+      "texte": "Maison des voisins, construite sur leur terrain, plus haut que celui de Paula. Environ 3 descentes de gouttière : positions indicatives, à vérifier."
     },
     {
       "id": 2,
@@ -483,7 +483,7 @@
       "faitage": 3.0,
       "faitage_parallele_a": "x",
       "transparence_vue_ensemble": 0.62,
-      "texte": "Maison de Paula (1820), représentée transparente pour voir ce qui se passe dessous."
+      "texte": "Maison de Paula (1820), représentée transparente pour voir ce qui se passe dessous. Deux descentes de gouttière, une à l'avant, une à l'arrière (positions indicatives)."
     },
     {
       "id": 12,
@@ -501,7 +501,7 @@
     },
     {
       "id": 13,
-      "ancre": [15.8, 0.1, 1.2],
+      "ancre": [16.0, 0.8, 0.9],
       "groupe": "paula",
       "nom": "Rondins en béton",
       "type": "rondins",
@@ -509,11 +509,13 @@
       "x_depart": 13.25,
       "pas": 0.4,
       "largeur": 0.34,
-      "y0": -0.25,
-      "y1": 0.09,
+      "_note": "Réponse de Paula du 23/11/2026 : hauteur irrégulière, 50 cm au plus, en dénivelé (environ 50 cm, descend un peu, puis remonte) ; le mur des voisins est juste derrière, collé aux rondins.",
+      "y0": -0.475,
+      "y1": -0.135,
       "z0": 0,
-      "hauteur": 1.0,
-      "texte": "Rondins en béton, sans fondation, présents à l'achat ; le mur des voisins s'y appuie."
+      "hauteur": 0.5,
+      "hauteurs": [0.5, 0.46, 0.42, 0.38, 0.35, 0.39, 0.45, 0.5],
+      "texte": "Rondins en béton, sans fondation, présents à l'achat, hauteur irrégulière d'environ 50 cm au plus."
     },
     {
       "id": 14,
@@ -567,8 +569,26 @@
       "rayon_x": 4.0,
       "rayon_y": 2.5,
       "texte": "Eau constatée sous la maison. Les flèches montrent un écoulement probable, à vérifier par l'expert."
+    },
+    {
+      "id": 16,
+      "sans_pastille": true,
+      "_note": "Réponse de Paula du 23/11/2026 : bambous dans le petit jardin à l'arrière de la maison, environ 6 m. Pas de numéro de repère : la fiche s'ouvre en touchant les bambous. Position dans le jardin indicative.",
+      "ancre": [1.9, 10.6, 3.5],
+      "groupe": "paula",
+      "nom": "Bambous",
+      "type": "bambous",
+      "hauteur": 6,
+      "positions": [[1.2, 10.2], [1.8, 10.9], [2.5, 10.3], [1.4, 11.3], [2.6, 11.2], [3.1, 10.7]],
+      "texte": "Bambous dans le petit jardin à l'arrière de la maison de Paula (environ 6 m de haut). Position indicative."
     }
   ],
+  "descentes_gouttieres": {
+    "_note": "Réponse de Paula du 23/11/2026 : environ 3 descentes sur la maison voisine, 2 sur la maison de Paula (une à l'avant, une à l'arrière). Positions indicatives, à vérifier.",
+    "rayon": 0.1,
+    "voisine": [[1.0, -6.1], [12.0, -6.1], [6.5, -14.9]],
+    "paula": [[8.85, 0.15], [8.85, 7.85]]
+  },
   "fleches_eau_vue_ensemble": [
     [
       [
@@ -694,6 +714,7 @@
     "wc": [
       {
         "nom": "WC 1",
+        "niveau": "rez-de-chaussée",
         "position": [
           4.5,
           6.8
@@ -702,13 +723,24 @@
       },
       {
         "nom": "WC 2",
+        "niveau": "étage",
         "position": [
           4.5,
-          5.45
+          4.8
         ],
-        "z": 0.25
+        "z": 2.8
       }
     ],
+    "_note_wc": "Réponse de Paula du 23/11/2026 : un WC au rez-de-chaussée, un à l'étage, presque l'un au-dessus de l'autre, décalés d'environ 2 m, avec une descente verticale commune vers le collecteur.",
+    "etage": {
+      "z": 2.8,
+      "epaisseur": 0.15
+    },
+    "descente_commune": {
+      "y": 5.1,
+      "z0": -0.95,
+      "z1": 2.8
+    },
     "points_interrogation": {
       "_note": "Décision du 23/11/2026 : deux points, comme la planche 2, couleur encre (le rouge est réservé à la limite). Zones que personne n'a encore vues.",
       "couleur": "encre",
@@ -917,13 +949,13 @@
         ],
         [
           4.5,
-          5.45,
+          5.1,
           -0.95
         ],
         [
           4.5,
-          5.45,
-          0.25
+          5.1,
+          2.8
         ]
       ]
     },
@@ -1010,8 +1042,9 @@
     "racines": "Effet possible des racines sur les fondations : à vérifier par l'expert."
   },
   "a_verifier_affiche": [
-    "Position exacte du regard et des deux WC : à vérifier.",
-    "Destination des gouttières des voisins : à vérifier."
+    "Position exacte du regard : à vérifier.",
+    "Destination des gouttières des voisins : à vérifier.",
+    "Les gouttières des voisins sont-elles raccordées au tout-à-l'égout ? À vérifier par l'expert."
   ],
   "verifications_expert": [
     "Inspection de la canalisation par caméra : joint ouvert, fissure, racines ?",
@@ -1019,7 +1052,8 @@
     "Origine de l'eau : test au colorant depuis le terrain des voisins",
     "Présence d'un drainage derrière le mur des voisins",
     "Destination des gouttières des voisins",
-    "Taux d'humidité, pièce par pièce, et sécurité électricité et gaz"
+    "Taux d'humidité, pièce par pièce, et sécurité électricité et gaz",
+    "Effet possible des racines (arbres des voisins et de Paula) sur les fondations : à vérifier."
   ],
   "mentions_obligatoires": [
     "Schéma explicatif, non à l'échelle, d'après les plans de 1991 et 2015 et les indications de Paula.",

@@ -2,7 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { PerspectiveCamera, Vector3, type Camera } from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
-import { elementParId, scene, type Point3 } from '../data/scene'
+import { elementParId, elementsReperes, type Point3 } from '../data/scene'
 import { toThree } from '../lib/coords'
 import { cadrer } from '../lib/geom'
 import { zoneVerif } from '../lib/expert'
@@ -19,7 +19,7 @@ const RAPPROCHEMENT = 0.5
 function pointsACadrer(): Vector3[] {
   const { min, max } = EMPRISE
   const coins = [min.x, max.x].flatMap((x) => [min.z, max.z].map((z) => new Vector3(x, 0, z)))
-  return [...coins, ...scene.elements.map((e) => toThree(e.ancre))]
+  return [...coins, ...elementsReperes.map((e) => toThree(e.ancre))]
 }
 
 interface Vue {

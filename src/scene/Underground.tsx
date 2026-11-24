@@ -143,20 +143,11 @@ function Interrogation({ position, nom }: { position: Point3; nom: string }) {
   )
 }
 
-/** Cuvette de WC vue de profil : socle, cuvette, réservoir ; descente vers le collecteur. */
+/** Cuvette de WC vue de profil : socle, cuvette, réservoir. */
 function Wc({ y, z }: { y: number; z: number }) {
   const blanc = palette.maison_voisine_murs
-  const c = ss.collecteur
   return (
     <group>
-      <Rect
-        y0={y - 0.03}
-        y1={y + 0.03}
-        z0={c.de[2]}
-        z1={z}
-        couleur={palette.beton_fonce}
-        recul={DEVANT}
-      />
       <Rect y0={y - 0.12} y1={y + 0.12} z0={z} z1={z + 0.2} couleur={blanc} recul={DETAIL} aretes />
       <Rect
         y0={y - 0.25}
@@ -176,6 +167,35 @@ function Wc({ y, z }: { y: number; z: number }) {
         recul={DETAIL}
         aretes
       />
+    </group>
+  )
+}
+
+/**
+ * Évacuation des WC : descente verticale commune jusqu'au collecteur, branchement de chaque WC
+ * (sous le plancher pour le rez-de-chaussée, dans le plancher de l'étage pour l'étage).
+ */
+function Evacuation() {
+  const d = ss.descente_commune
+  const e = ss.etage
+  const tuyau = (y0: number, y1: number, z0: number, z1: number, cle: string) => (
+    <Rect
+      key={cle}
+      y0={Math.min(y0, y1)}
+      y1={Math.max(y0, y1)}
+      z0={z0}
+      z1={z1}
+      couleur={palette.beton_fonce}
+      recul={DEVANT}
+    />
+  )
+  return (
+    <group>
+      {tuyau(d.y - 0.04, d.y + 0.04, d.z0, d.z1, 'descente')}
+      {ss.wc.map((w) => {
+        const zb = w.z === e.z ? e.z - e.epaisseur / 2 : ss.plancher.z - ss.plancher.epaisseur / 2
+        return tuyau(w.position[1], d.y, zb - 0.04, zb + 0.04, w.nom)
+      })}
     </group>
   )
 }
@@ -220,7 +240,7 @@ function Regard() {
   )
 }
 
-/** Maison de Paula coupée : intérieur clair, murs, plancher, pignon en trait. */
+/** Maison de Paula coupée : intérieur clair, murs, plancher, étage, pignon en trait. */
 function MaisonCoupee() {
   const m = elementParId(11) as ElementMaison
   const arr = ss.fondations[0]!
@@ -262,6 +282,16 @@ function MaisonCoupee() {
         y1={arr.y0}
         z0={pl.z - pl.epaisseur}
         z1={pl.z}
+        couleur={palette.beton}
+        recul={DEVANT}
+        aretes
+      />
+      {/* Plancher de l'étage (WC 2). */}
+      <Rect
+        y0={fac.y1}
+        y1={arr.y0}
+        z0={ss.etage.z - ss.etage.epaisseur}
+        z1={ss.etage.z}
         couleur={palette.beton}
         recul={DEVANT}
         aretes
@@ -349,10 +379,12 @@ function CoteVoisins() {
 /** Étiquettes de la coupe : toujours (etapes absent) ou seulement pour certaines étapes. */
 const ETIQUETTES: { texte: string; position: Point3; etapes?: number[] }[] = [
   { texte: 'regard', position: [COUPE_X, ss.regard.centre[1], ss.regard.z1 + 0.45] },
-  {
-    texte: 'deux WC',
-    position: [COUPE_X, (ss.wc[0]!.position[1] + ss.wc[1]!.position[1]) / 2, 1.55],
-  },
+  ...ss.wc.map((w) => ({
+    texte: `WC ${w.niveau === 'étage' ? "de l'étage" : 'du rez-de-chaussée'}`,
+    position: [COUPE_X, w.position[1], w.z + 1.15] as Point3,
+    // Étapes H à J seulement : ailleurs, ces étiquettes sortent du cadrage à 390 px.
+    etapes: [7, 8, 9],
+  })),
   { texte: 'vide sanitaire', position: [COUPE_X, 4, -0.45] },
   {
     texte: 'électricité, gaz',
@@ -450,6 +482,7 @@ export function Underground() {
           />
           <MaisonCoupee />
           <Regard />
+          <Evacuation />
           {ss.wc.map((w) => (
             <Wc key={w.nom} y={w.position[1]} z={w.z} />
           ))}

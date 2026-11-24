@@ -1,5 +1,5 @@
 import { Html } from '@react-three/drei'
-import { scene, type Element } from '../data/scene'
+import { elementsReperes, type Element } from '../data/scene'
 import { toThree } from '../lib/coords'
 import { tonPastille } from '../lib/pastille'
 import { useCalqueVisible, useStore } from '../store'
@@ -32,7 +32,7 @@ export function Markers() {
   if (mode !== 'vue') return null
   return (
     <group>
-      {scene.elements.map((el) => (
+      {elementsReperes.map((el) => (
         <Pastille key={el.id} el={el} />
       ))}
     </group>
